@@ -1,0 +1,14 @@
+main: me.thecamzone.NovaStrike
+name: "NovaStrike"
+version: 0.0.2
+authors: [TheCamZone]
+description: NovaStrike - Created by TheCamZone for Bambizo
+api-version: '1.20'
+#load: STARTUP
+#depend: [WorldGuard, PlaceholderAPI]
+
+commands:
+  novastrike:
+    aliases: [ ns, novastrikes ]
+  party:
+    aliases: []
