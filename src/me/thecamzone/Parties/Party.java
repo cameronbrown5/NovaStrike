@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import me.thecamzone.Utils.Messager;
@@ -17,6 +20,8 @@ public class Party {
 	private UUID id;
 	private UUID leader;
 	public final int maxPlayers = 5;
+	private BossBar bar;
+	private String message = "Waiting for Party Leader...";
 	
 	public Party(UUID id, UUID leader) {
 		this.id = id;
@@ -29,6 +34,39 @@ public class Party {
 	
 	public List<UUID> getInvitedPlayers() {
 		return invitedPlayers;
+	}
+	
+	public void setBossBar(BossBar bar) {
+		this.bar = bar;
+	}
+	
+	public BossBar getBossBar() {
+		return bar;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public void refreshBar() {
+		String barTitle = Bukkit.getPlayer(getLeader()).getName() + "'s Party | " + getPlayers().size() + " / " + maxPlayers + " | " + message;
+		
+		if(bar == null) {
+        	bar = Bukkit.getServer().createBossBar(
+            	barTitle, 
+            	BarColor.PURPLE, 
+            	BarStyle.SOLID
+            );
+        }
+		
+		bar.setTitle(barTitle);
+		
+		bar.removeAll();
+        
+        for(UUID uuid : players) {
+        	bar.addPlayer(Bukkit.getPlayer(uuid));
+        	bar.setVisible(true);
+        }
 	}
 	
 	public void addPlayer(Player player) {
@@ -47,6 +85,8 @@ public class Party {
 		}
 		
 		players.add(player.getUniqueId());
+		
+		refreshBar();
 	}
 	
 	public void removePlayer(Player player) {

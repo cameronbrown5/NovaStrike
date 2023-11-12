@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import me.thecamzone.NovaStrike;
 import me.thecamzone.Commands.Party.PartyCommand;
-import me.thecamzone.Parties.Party;
 import me.thecamzone.Parties.PartyManager;
 import me.thecamzone.Utils.Messager;
 import net.md_5.bungee.api.ChatColor;

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-
 public class PartyManager {
 
 	private final Map<UUID, Party> parties = new HashMap<>();
