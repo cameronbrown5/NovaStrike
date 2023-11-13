@@ -1,24 +1,22 @@
 package me.thecamzone.Commands.Party.SubCommands;
 
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.thecamzone.NovaStrike;
 import me.thecamzone.Commands.Party.PartyCommand;
+import me.thecamzone.Parties.Party;
 import me.thecamzone.Parties.PartyManager;
 import me.thecamzone.Utils.Messager;
 import net.md_5.bungee.api.ChatColor;
 
-public class PartyListCommand extends PartyCommand {
-	public PartyListCommand() {
-		setName("list");
-		setInfoMessage("Lists members in your party");
+public class PartyLeaveCommand extends PartyCommand {
+	public PartyLeaveCommand() {
+		setName("leave");
+		setInfoMessage("Leaves your party.");
 		setPermission("novastrike.party");
 		setArgumentLength(1);
-		setUsageMessage("/party list");
+		setUsageMessage("/party leave");
 		setUniversalCommand(true);
 	}
 
@@ -33,20 +31,16 @@ public class PartyListCommand extends PartyCommand {
 		Player player = (Player) sender;
 		
 		if(partyManager.getPlayerParty(player.getUniqueId()) == null) {
-			Messager.sendErrorMessage(sender, ChatColor.RED + "You are not apart of a party.");
+			Messager.sendErrorMessage(sender, ChatColor.RED + "You are not in a party.");
 			return;
 		}
 		
-		player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Party List");
-		for(UUID p : partyManager.getPlayerParty(player.getUniqueId()).getPlayers()) {
-			Player partyPlayer = Bukkit.getPlayer(p);
-			
-			if(partyPlayer == null) {
-				continue;
-			}
-			
-			player.sendMessage(ChatColor.WHITE + "- " + ChatColor.GRAY + partyPlayer.getName());
-		}
+		Party party = partyManager.getPlayerParty(player.getUniqueId());
+		
+		party.removePlayer(player);
+		
+		Messager.sendSuccessMessage(player, ChatColor.GREEN + "You have successfully left the party.");
+		
 		
 	}
 }

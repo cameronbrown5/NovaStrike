@@ -1,24 +1,23 @@
 package me.thecamzone.Commands.Party.SubCommands;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.thecamzone.NovaStrike;
 import me.thecamzone.Commands.Party.PartyCommand;
+import me.thecamzone.Parties.Party;
 import me.thecamzone.Parties.PartyManager;
 import me.thecamzone.Utils.Messager;
 import net.md_5.bungee.api.ChatColor;
 
-public class PartyListCommand extends PartyCommand {
-	public PartyListCommand() {
-		setName("list");
-		setInfoMessage("Lists members in your party");
+public class PartyPromoteCommand extends PartyCommand {
+	public PartyPromoteCommand() {
+		setName("promote");
+		setInfoMessage("Promotes a player in the party to leader.");
 		setPermission("novastrike.party");
-		setArgumentLength(1);
-		setUsageMessage("/party list");
+		setArgumentLength(2);
+		setUsageMessage("/party promote <PlayerName>");
 		setUniversalCommand(true);
 	}
 
@@ -31,22 +30,25 @@ public class PartyListCommand extends PartyCommand {
 		}
 		
 		Player player = (Player) sender;
+		Player otherPlayer = Bukkit.getPlayer(args[1]);
 		
-		if(partyManager.getPlayerParty(player.getUniqueId()) == null) {
-			Messager.sendErrorMessage(sender, ChatColor.RED + "You are not apart of a party.");
+		if(otherPlayer == null) {
+			Messager.sendErrorMessage(player, ChatColor.RED + args[1] + " is not a valid player.");
 			return;
 		}
 		
-		player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Party List");
-		for(UUID p : partyManager.getPlayerParty(player.getUniqueId()).getPlayers()) {
-			Player partyPlayer = Bukkit.getPlayer(p);
-			
-			if(partyPlayer == null) {
-				continue;
-			}
-			
-			player.sendMessage(ChatColor.WHITE + "- " + ChatColor.GRAY + partyPlayer.getName());
+		if(partyManager.getPlayerParty(player.getUniqueId()) == null) {
+			Messager.sendErrorMessage(player, ChatColor.RED + "You are not in a party.");
+			return;
 		}
 		
+		Party party = partyManager.getPlayerParty(player.getUniqueId());
+		
+		if(party.getLeader() != player.getUniqueId()) {
+			Messager.sendErrorMessage(player, ChatColor.RED + "You are not the leader of your party.");
+			return;
+		}
+		
+		party.setLeader(otherPlayer);
 	}
 }
