@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import me.thecamzone.Parties.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,14 +19,13 @@ import me.thecamzone.Parties.PartyManager;
 public class PartyCommandCompleter implements TabCompleter {
 
 	private NovaStrike plugin = NovaStrike.getInstance();
-
 	private PartyManager partyManager = plugin.getPartyManager();
 	
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {
 			return new ArrayList<String>();
 		}
-		
+
 		Player player = (Player) sender;
 		
 		ArrayList<String> arguments = new ArrayList<>();
@@ -36,8 +36,9 @@ public class PartyCommandCompleter implements TabCompleter {
 				continue;
 			arguments.add(partyCommand.getName());
 		}
-		PartyCommand subcommand = (PartyCommand) this.plugin.getPartySubcommands().get(args[0]);
+		PartyCommand subcommand = this.plugin.getPartySubcommands().get(args[0]);
 		List<String> onlinePlayerNames = new ArrayList<>();
+
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			onlinePlayerNames.add(p.getName());
 		}
@@ -46,10 +47,11 @@ public class PartyCommandCompleter implements TabCompleter {
 			arguments.clear();
 			return arguments;
 		}
+
 		if (args.length < 2) {
 			return getCompletion(arguments, args, 0);
 		}
-		
+
 		if (args.length == 2) {
 			if(args[0].equalsIgnoreCase("invite")) {
 				List<String> onlinePlayers = onlinePlayerNames;
@@ -63,8 +65,9 @@ public class PartyCommandCompleter implements TabCompleter {
 					return new ArrayList<>();
 				}
 				
-				List<String> partyPlayers = new ArrayList<String>();
-				
+				List<String> partyPlayers = new ArrayList<>();
+
+
 				for(UUID p : partyManager.getPlayerParty(player.getUniqueId()).getPlayers()) {
 					partyPlayers.add(Bukkit.getOfflinePlayer(p).getName());
 				}
@@ -74,7 +77,7 @@ public class PartyCommandCompleter implements TabCompleter {
 			}
 			
 			if(args[0].equalsIgnoreCase("accept")) {
-				List<String> partyInvites = new ArrayList<String>();
+				List<String> partyInvites = new ArrayList<>();
 				
 				for(PartyInvite partyInvite : partyManager.getPlayerInvites(player.getUniqueId())) {
 					partyInvites.add(partyInvite.getInviterName());

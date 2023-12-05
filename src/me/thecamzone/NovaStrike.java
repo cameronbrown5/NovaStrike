@@ -3,6 +3,11 @@ package me.thecamzone;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import joptsimple.internal.Reflection;
+import me.thecamzone.Events.InventoryClickHandler;
+import me.thecamzone.Events.InventoryCloseHandler;
+import me.thecamzone.Events.InventoryDragHandler;
+import me.thecamzone.gamePlayer.GPlayerManager;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,16 +34,18 @@ import me.thecamzone.Utils.DataFile;
 public class NovaStrike extends JavaPlugin {
 
 	private static NovaStrike plugin;
-	
+
+	private GPlayerManager gPlayerManager;
 	private PartyManager partyManager;
-	
+
 	private final Map<String, NovaStrikeCommand> novaStrikeSubcommands = new LinkedHashMap<>();
 	private final Map<String, PartyCommand> partySubcommands = new LinkedHashMap<>();
 	
 	@Override
 	public void onEnable() {
 		plugin = this;
-		
+
+		gPlayerManager = new GPlayerManager();
 		partyManager = new PartyManager();
 		
 		loadFiles();
@@ -58,6 +65,9 @@ public class NovaStrike extends JavaPlugin {
 	
 	private void registerListeners() {
 		getServer().getPluginManager().registerEvents(new PlayerJoinHandler(), this);
+		getServer().getPluginManager().registerEvents(new InventoryClickHandler(), this);
+		getServer().getPluginManager().registerEvents(new InventoryCloseHandler(), this);
+		getServer().getPluginManager().registerEvents(new InventoryDragHandler(), this);
 	}
 	
 	private void registerCommands() {
@@ -100,5 +110,8 @@ public class NovaStrike extends JavaPlugin {
 	public PartyManager getPartyManager() {
 		return partyManager;
 	}
-	
+
+	public GPlayerManager getgPlayerManager() {
+		return gPlayerManager;
+	}
 }

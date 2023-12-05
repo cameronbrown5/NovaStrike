@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
+
 public class PartyManager {
 
 	private final Map<UUID, Party> parties = new HashMap<>();
@@ -27,7 +29,8 @@ public class PartyManager {
 		party.setBossBar(null);
         parties.remove(party.getID());
     }
-	
+
+
 	public Party getParty(UUID partyId) {
         return parties.get(partyId);
     }
@@ -36,6 +39,7 @@ public class PartyManager {
 		playerPartyMap.put(player, party);
 	}
 
+	@Nullable
 	public Party getPlayerParty(UUID player) {
 	    return playerPartyMap.get(player);
 	}
@@ -53,7 +57,7 @@ public class PartyManager {
 		} else {
 			List<PartyInvite> invites = new ArrayList<>();
 			invites = playerInvites.get(player);
-			
+
 			invites.add(party);
 			playerInvites.put(player, invites);
 		}

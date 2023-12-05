@@ -10,7 +10,7 @@ import me.thecamzone.NovaStrike;
 import me.thecamzone.Parties.Party;
 import me.thecamzone.Parties.PartyManager;
 
-public class PlayerJoinHandler implements Listener {
+public class PlayerJoinHandler extends NovaListener {
 
 	PartyManager partyManager = NovaStrike.getInstance().getPartyManager();
 	

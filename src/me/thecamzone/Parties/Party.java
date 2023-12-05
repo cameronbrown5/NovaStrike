@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import me.thecamzone.Utils.Type_Runnable;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -17,9 +18,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Party {
 
-	private List<UUID> players = new ArrayList<>();
-	private List<UUID> invitedPlayers = new ArrayList<>();
-	private UUID id;
+	private final List<UUID> players = new ArrayList<>();
+	private final List<UUID> invitedPlayers = new ArrayList<>();
+	private final UUID id;
 	private String leaderName;
 	private UUID leader;
 	public final int maxPlayers = 5;
@@ -33,6 +34,14 @@ public class Party {
 		this.leaderName = leader.getName();
 		this.leader = leader.getUniqueId();
 	}
+
+	public void forPlayers(Type_Runnable<UUID> toRun){
+
+		players.forEach(toRun::run);
+
+	}
+
+
 	
 	public List<UUID> getPlayers() {
 		return players;
