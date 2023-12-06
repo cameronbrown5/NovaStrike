@@ -4,10 +4,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import joptsimple.internal.Reflection;
+import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeTestCommand;
 import me.thecamzone.Events.InventoryClickHandler;
 import me.thecamzone.Events.InventoryCloseHandler;
 import me.thecamzone.Events.InventoryDragHandler;
 import me.thecamzone.gamePlayer.GPlayerManager;
+import me.thecamzone.server_connections.ConnectionManager;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,6 +53,8 @@ public class NovaStrike extends JavaPlugin {
 		loadFiles();
 		registerListeners();
 		registerCommands();
+
+		ConnectionManager.connect();
 	}
 	
 	public static NovaStrike getInstance() {
@@ -73,6 +77,7 @@ public class NovaStrike extends JavaPlugin {
 	private void registerCommands() {
 		// NOVASTRIKE SUBCOMMANDS
 		this.novaStrikeSubcommands.put("help", new NovaStrikeHelpCommand());
+		this.novaStrikeSubcommands.put("test", new NovaStrikeTestCommand());
 		
 		// PARTY SUBCOMMANDS
 		this.partySubcommands.put("help", new PartyHelpCommand());
