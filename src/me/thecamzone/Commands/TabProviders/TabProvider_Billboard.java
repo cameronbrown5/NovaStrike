@@ -1,7 +1,7 @@
 package me.thecamzone.Commands.TabProviders;
 
+import me.thecamzone.Utils.jcommandbuilder.JTabProvider;
 import org.bukkit.entity.Display;
-import utils.jcommandbuilder.JTabProvider;
 
 import java.util.ArrayList;
 import java.util.List;

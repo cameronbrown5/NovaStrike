@@ -15,6 +15,14 @@ public class StringUtil {
 		return text.substring(0, 1).toUpperCase() + text.substring(0, 1).toUpperCase();
 	}
 
+	public static String displayArray(String[] args) {
+		StringBuilder string = new StringBuilder();
+		for(int i = 1; i < args.length; i++) {
+			string.append(" ").append(args[i]);
+		}
+		return string.toString().trim();
+	}
+
 	public static String formatEnum(Enum<?> enumeration) {
 		String[] split = enumeration.name().split("_");
 		if (split.length > 0) {

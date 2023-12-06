@@ -1,7 +1,7 @@
 package me.thecamzone.Commands.TabProviders;
 
-import net.minecraft.world.entity.EquipmentSlot;
-import utils.jcommandbuilder.JTabProvider;
+import me.thecamzone.Utils.jcommandbuilder.JTabProvider;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.ArrayList;
 import java.util.List;

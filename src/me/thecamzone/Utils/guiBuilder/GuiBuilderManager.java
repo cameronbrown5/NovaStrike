@@ -7,6 +7,7 @@
 
 package me.thecamzone.Utils.guiBuilder;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -56,12 +57,17 @@ public class GuiBuilderManager {
 
     public void manageInventoryClick(InventoryClickEvent e) {
         Inventory inventory = e.getClickedInventory();
+        Player p = (Player) e.getWhoClicked();
 
         if (e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
             e.setCancelled(true);
 
+        if(inventory.getHolder() instanceof Player) {
+            Bukkit.broadcastMessage(inventory.getHolder().toString());
+            inventory = p.getOpenInventory().getTopInventory();
+        }
+
         if (inventory != null && inventory.getHolder() instanceof GUIHolder gui_holder) {
-            Player p = (Player) e.getWhoClicked();
             GUI gui = activeGuis.get(gui_holder.uniqueIdentifier());
 
             if (gui != null)

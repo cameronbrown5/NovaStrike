@@ -1,30 +1,16 @@
 package me.thecamzone.server_connections;
 
+import me.thecamzone.Utils.StringUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class ConnectionCommand {
 
-    public void handleIncomingMessage(String rawMessage) {
-        String[] args = rawMessage.split(" ");
-        String command = args[0].toUpperCase();
-
-        switch(command) {
-            case party:
+    public static void handleNetworkCommand(String command, String[] args) {
+        if(command.equalsIgnoreCase("runcommand")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), StringUtil.displayArray(args).replace("/", ""));
         }
     }
 
-    public void commandPartyInviteReceive(String[] args) {
-
-    }
-
-    public void commandPartyInviteSend(Player sender, Player receiver) {
-
-    }
-
-    public void updatePlayerCountSend() {
-        ConnectionManager.connection.sendMessageToProxy("updatePlayerCount " + Bukkit.getOnlinePlayers().size());
-    }
 
 
 }

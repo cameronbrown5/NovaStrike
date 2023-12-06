@@ -1,37 +1,29 @@
 package me.thecamzone;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import joptsimple.internal.Reflection;
-import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeTestCommand;
+import me.thecamzone.Commands.CommandRegister;
+import me.thecamzone.Commands.NovaStrike.NovaStrikeCommand;
+import me.thecamzone.Commands.NovaStrike.NovaStrikeCommandCompleter;
+import me.thecamzone.Commands.NovaStrike.NovaStrikeCommandRunner;
+import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeHelpCommand;
+import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeMessageProxyCommand;
+import me.thecamzone.Commands.Party.PartyCommand;
+import me.thecamzone.Commands.Party.PartyCommandCompleter;
+import me.thecamzone.Commands.Party.PartyCommandRunner;
+import me.thecamzone.Commands.Party.SubCommands.*;
 import me.thecamzone.Events.InventoryClickHandler;
 import me.thecamzone.Events.InventoryCloseHandler;
 import me.thecamzone.Events.InventoryDragHandler;
+import me.thecamzone.Events.PlayerJoinHandler;
+import me.thecamzone.Parties.PartyManager;
+import me.thecamzone.Utils.DataFile;
 import me.thecamzone.gamePlayer.GPlayerManager;
 import me.thecamzone.server_connections.ConnectionManager;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommand;
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommandCompleter;
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommandRunner;
-import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeHelpCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyAcceptCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyHelpCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyInviteCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyInvitesCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyKickCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyLeaveCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyListCommand;
-import me.thecamzone.Commands.Party.SubCommands.PartyPromoteCommand;
-import me.thecamzone.Events.PlayerJoinHandler;
-import me.thecamzone.Parties.PartyManager;
-import me.thecamzone.Commands.Party.PartyCommand;
-import me.thecamzone.Commands.Party.PartyCommandCompleter;
-import me.thecamzone.Commands.Party.PartyCommandRunner;
-import me.thecamzone.Utils.DataFile;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class NovaStrike extends JavaPlugin {
 
@@ -52,6 +44,8 @@ public class NovaStrike extends JavaPlugin {
 		
 		loadFiles();
 		registerListeners();
+
+		new CommandRegister();
 		registerCommands();
 
 		ConnectionManager.connect();
@@ -77,7 +71,7 @@ public class NovaStrike extends JavaPlugin {
 	private void registerCommands() {
 		// NOVASTRIKE SUBCOMMANDS
 		this.novaStrikeSubcommands.put("help", new NovaStrikeHelpCommand());
-		this.novaStrikeSubcommands.put("test", new NovaStrikeTestCommand());
+		this.novaStrikeSubcommands.put("messageproxy", new NovaStrikeMessageProxyCommand());
 		
 		// PARTY SUBCOMMANDS
 		this.partySubcommands.put("help", new PartyHelpCommand());

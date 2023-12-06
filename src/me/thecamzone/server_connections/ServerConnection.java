@@ -1,12 +1,15 @@
 package me.thecamzone.server_connections;
 
+import me.thecamzone.NovaStrike;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ServerConnection implements Runnable {
     private final Socket socket;
@@ -25,7 +28,19 @@ public class ServerConnection implements Runnable {
             while(true) {
                 String input = in.readLine();
 
-                Bukkit.getConsoleSender().sendMessage(input);
+                String[] args = input.split(" ");
+                String command = args[0];
+                String[] modifiedArgs = Arrays.copyOfRange(args, 1, args.length);
+
+                // Run task synchronously
+                BukkitRunnable task = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        ConnectionCommand.handleNetworkCommand(command, modifiedArgs);
+                        Bukkit.getConsoleSender().sendMessage("[Proxy -> Game] " + input);
+                    }
+                };
+                task.runTask(NovaStrike.getInstance());
             }
         } catch(IOException e) {
             Bukkit.getConsoleSender().sendMessage("[NovaStrike] Disconnected from proxy.");
