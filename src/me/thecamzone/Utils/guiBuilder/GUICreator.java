@@ -83,7 +83,10 @@ public class GUICreator {
 
         Inventory inventory = Bukkit.createInventory(new GUIHolder(uniqueIdentifier, persistentGUI), size, StringUtil.formatColor(name));
 
-        items.forEach((slot, guiItem) -> inventory.setItem(slot, guiItem.getItem()));
+        items.forEach((slot, guiItem) -> {
+            if (slot > size - 1) return;
+            inventory.setItem(slot, guiItem.getItem());
+        });
 
         GUI gui = new GUI(inventory, items);
         GuiBuilderManager.getInstance().registerGUI(uniqueIdentifier, gui);
