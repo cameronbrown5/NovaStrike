@@ -2,14 +2,13 @@ package me.thecamzone.server_connections;
 
 import me.thecamzone.NovaStrike;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 
 public class ConnectionManager {
     private static final String SERVER_IP = "127.0.0.1";
@@ -29,12 +28,11 @@ public class ConnectionManager {
         task = new BukkitRunnable() {
             @Override
             public void run() {
-                Socket socket = null;
-
                 Bukkit.getConsoleSender().sendMessage("[NovaStrike] Connecting to proxy server...");
 
                 try {
-                    socket = new Socket(SERVER_IP, SERVER_PORT);
+                    SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    SSLSocket socket = (SSLSocket) sslSocketFactory.createSocket(SERVER_IP, SERVER_PORT);
                     connection = new ServerConnection(socket);
                     Bukkit.getConsoleSender().sendMessage("[NovaStrike] Connected to " + socket.getInetAddress() + ":" + socket.getPort());
                     connection.run();

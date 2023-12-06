@@ -1,9 +1,10 @@
 package me.thecamzone.Utils;
 
-import java.util.concurrent.TimeUnit;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class StringUtil {
 	public static String formatColor(String text) {
@@ -28,6 +29,23 @@ public class StringUtil {
 			return String.join(" ", (CharSequence[]) split);
 		}
 		return capitalize(enumeration.name());
+	}
+
+	public static ArrayList<String> getCallTree(boolean includeFullError) {
+		ArrayList<String> calls = new ArrayList<>();
+		for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
+
+			String check = s.getClassName().toUpperCase();
+
+			if (!includeFullError) {
+				if (check.contains("NET.MINECRAFT") || check.contains("ORG.BUKKIT") || check.contains("JAVA.LANG") || check.contains("UTILS.ERRORREPORTER") || check.contains("JDK.INTERNAL"))
+					continue;
+				if (s.getMethodName().toUpperCase().contains("GETCALLTREE")) continue;
+			}
+			calls.add(s.toString());
+		}
+
+		return calls;
 	}
 
 	public static String millisToText(long millis) {
