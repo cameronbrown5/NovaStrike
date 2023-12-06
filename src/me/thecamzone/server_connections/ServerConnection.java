@@ -1,6 +1,5 @@
 package me.thecamzone.server_connections;
 
-import me.thecamzone.NovaStrike;
 import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ServerConnection implements Runnable {
     private final Socket socket;
@@ -18,7 +16,7 @@ public class ServerConnection implements Runnable {
     public ServerConnection(Socket socket) throws IOException {
         this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream());
+        out = new PrintWriter(socket.getOutputStream(), true);
     }
 
     @Override
@@ -40,5 +38,9 @@ public class ServerConnection implements Runnable {
             }
         }
 
+    }
+
+    public void sendMessageToProxy(String message) {
+        out.println(message);
     }
 }
