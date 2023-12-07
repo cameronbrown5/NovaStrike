@@ -19,7 +19,7 @@ public class DeveloperCommand {
     @JSubCommand("OpenPersonalStash")
     @JCommandPlayerOnly
     public void openPersonalStash(JCommandSender sender) {
-        PersonalStash.getInstance().openGui(sender.asGPlayer());
+        PersonalStash.getInstance().openGui(sender.asGPlayer(), 1);
     }
 
     @JCommand("Dev")

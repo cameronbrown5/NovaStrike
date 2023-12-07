@@ -1,12 +1,15 @@
 package me.thecamzone.gamePlayer;
 
-import dev.lone.itemsadder.api.CustomStack;
+import me.thecamzone.Utils.EquipmentType;
+import me.thecamzone.Utils.ItemAdderUtil;
 import me.thecamzone.Utils.task.TaskRepeat;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GPlayer extends PlayerWrapper {
 
@@ -19,38 +22,45 @@ public class GPlayer extends PlayerWrapper {
     private final HashMap<Integer, String> loadoutSecondaryWeapon = new HashMap<>();
     private final HashMap<Integer, String> loadoutGrenade = new HashMap<>();
 
-    private final Set<String> primaryWeapons = new HashSet<>();
-    private final Set<String> secondaryWeapons = new HashSet<>();
-    private final Set<String> grenades = new HashSet<>();
+    private final HashMap<EquipmentType, Set<String>> equipment = new HashMap<>();
+
 
     {
         dataController.load();
         startGPlayerTick();
+
+        for (int i = 0; i <  10; i++) {
+            grantEquipment(i + "", EquipmentType.PRIMARY);
+        }
+
+
     }
 
     public void setPrimaryWeapon(String weaponName){
 
     }
 
+    public void grantEquipment(String equipmentName, EquipmentType equipmentType){
+      equipment.get(equipmentType).add(equipmentName);
+    }
+
     public void giveLoadoutItems(int loadoutNumber){
-        getInventory().setItem(0, getCustomItem(loadoutPrimaryWeapon.get(loadoutNumber)));
-        getInventory().setItem(1, getCustomItem(loadoutSecondaryWeapon.get(loadoutNumber)));
-        getInventory().setItem(2, getCustomItem(loadoutGrenade.get(loadoutNumber)));
+  //      getInventory().setItem(0, getCustomItemAdderItem(loadoutPrimaryWeapon.get(loadoutNumber)));
+     //   getInventory().setItem(1, getCustomItemAdderItem(loadoutSecondaryWeapon.get(loadoutNumber)));
+     //   getInventory().setItem(2, getCustomItemAdderItem(loadoutGrenade.get(loadoutNumber)));
     }
 
     public void giveSpawnItems(){
 
     }
 
-    public ItemStack getCustomItem(String itemName){
-        CustomStack customItem = CustomStack.getInstance(itemName);
-
-        if (customItem == null) return new ItemStack(Material.PAPER);
-
-        return customItem.getItemStack();
+    public ArrayList<ItemStack> getAllEquipmentItems(EquipmentType equipmentType){
+        ArrayList<ItemStack> items = new ArrayList<>();
+        equipment.getOrDefault(equipmentType, new HashSet<>()).forEach(itemName -> items.add(ItemAdderUtil.fromItemID(itemName)));
+        return items;
     }
 
-    
+
     public GPlayer(Player p) {
         super(p);
     }

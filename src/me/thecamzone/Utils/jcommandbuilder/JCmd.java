@@ -26,7 +26,6 @@ public class JCmd {
     private final String permission;
     private boolean failedToLoad = false;
     private int rawCommandArgStart;
-    private int rawCommandArgsMin;
     private String usageString;
 
     public JCmd(Method commandMethod, Object commandClassInstance, CaseInsensitiveString coreCommandName, CaseInsensitiveString subCommandName, JArgument<?>[] jArguments, boolean playerOnlyCommand, boolean consoleOnlyCommand, String permission) {
@@ -43,7 +42,6 @@ public class JCmd {
 
     private void initialize() {
         boolean isCoreCommand = subCommandName.isEqual("*");
-        rawCommandArgsMin = isCoreCommand ? jArguments.length : jArguments.length + 1;
         rawCommandArgStart = isCoreCommand ? 0 : 1;
         generateUsageString();
 

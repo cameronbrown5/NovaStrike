@@ -7,8 +7,23 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class StringUtil {
+
+	private static final String ERROR_COLOR = "&c";
+	private static final String MAIN_COLOR = "&9";
+	private static final String SECONDARY_COLOR = "&3";
+
 	public static String formatColor(String text) {
+		text = text.replace("^e", ERROR_COLOR);
+		text = text.replace("^m", MAIN_COLOR);
+		text = text.replace("^s", SECONDARY_COLOR);
+
 		return ChatColor.translateAlternateColorCodes('&', text);
+	}
+
+	public static ArrayList<String> formatStringList(ArrayList<String> list) {
+		ArrayList<String> formattedStrings = new ArrayList<>();
+		list.forEach(s ->  formattedStrings.add(formatColor(s)));
+		return formattedStrings;
 	}
 	
 	public static String capitalize(String text) {

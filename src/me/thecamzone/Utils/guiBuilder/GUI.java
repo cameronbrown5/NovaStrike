@@ -7,36 +7,48 @@
 
 package me.thecamzone.Utils.guiBuilder;
 
+import me.thecamzone.gamePlayer.GPlayer;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
 public class GUI {
 
     private final Inventory guiInventory;
-    private final HashMap<Integer, GUIItem> clickableItemsBySlot;
+    private final HashMap<Integer, GUIItem> guiClickableItemsBySlot;
+    private final HashMap<Integer, GUIItem> inventoryClickableItemsBySlot;
 
-    public GUI(Inventory guiInventory, HashMap<Integer, GUIItem> clickableItemsBySlot) {
+    public GUI(Inventory guiInventory, HashMap<Integer, GUIItem> guiClickableItemsBySlot, HashMap<Integer, GUIItem> inventoryClickableItemsBySlot) {
         this.guiInventory = guiInventory;
-        this.clickableItemsBySlot = clickableItemsBySlot;
+        this.guiClickableItemsBySlot = guiClickableItemsBySlot;
+        this.inventoryClickableItemsBySlot = inventoryClickableItemsBySlot;
     }
 
     /**
      * @return If the event should be canceled.
      */
-    boolean processClick(Player p, InventoryClickEvent e) {
-        GUIItem clickedItem = clickableItemsBySlot.get(e.getSlot());
+    boolean processClick(GPlayer gPlayer, InventoryClickEvent e, boolean clickingInGui) {
+        GUIItem clickedItem = clickingInGui ? guiClickableItemsBySlot.get(e.getSlot()) : inventoryClickableItemsBySlot.get(e.getSlot());
 
         if (clickedItem == null)
             return true;
 
-        return clickedItem.onClick(p, e);
+        return clickedItem.onClick(gPlayer, e);
+    }
+
+    public void removeInventoryItemsOnClose(Player p){
+        inventoryClickableItemsBySlot.forEach((slot, item) -> p.getInventory().setItem(slot, new ItemStack(Material.AIR)));
+
     }
 
     public void open(Player p) {
         p.openInventory(guiInventory);
+
+        inventoryClickableItemsBySlot.forEach((slot, item) -> p.getInventory().setItem(slot, item.getItem()));
     }
 
     //------------------------------------------------------------------------------------------------------------------------------

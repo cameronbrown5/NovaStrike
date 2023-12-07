@@ -7,7 +7,8 @@
 
 package me.thecamzone.Utils.guiBuilder;
 
-import org.bukkit.Bukkit;
+import me.thecamzone.NovaStrike;
+import me.thecamzone.gamePlayer.GPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,6 +38,8 @@ public class GuiBuilderManager {
     public void manageInventoryClose(InventoryCloseEvent e) {
         Inventory inventory = e.getInventory();
         if (inventory.getHolder() instanceof GUIHolder gui_holder) {
+            GUI gui = activeGuis.get(gui_holder.uniqueIdentifier());
+            gui.removeInventoryItemsOnClose((Player) e.getPlayer());
 
             if (gui_holder.persistentGUI()) return;
 
@@ -57,21 +60,29 @@ public class GuiBuilderManager {
 
     public void manageInventoryClick(InventoryClickEvent e) {
         Inventory inventory = e.getClickedInventory();
-        Player p = (Player) e.getWhoClicked();
+        GPlayer gPlayer = NovaStrike.getInstance().getgPlayerManager().getGPlayer((Player) e.getWhoClicked());
+        boolean clickingInGui = true;
+
+        if (gPlayer == null){
+            e.setCancelled(true);
+            return;
+        }
 
         if (e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
             e.setCancelled(true);
 
+        if (inventory == null) return;
+
         if(inventory.getHolder() instanceof Player) {
-            Bukkit.broadcastMessage(inventory.getHolder().toString());
-            inventory = p.getOpenInventory().getTopInventory();
+            clickingInGui = false;
+            inventory = gPlayer.getOpenInventory().getTopInventory();
         }
 
-        if (inventory != null && inventory.getHolder() instanceof GUIHolder gui_holder) {
+        if (inventory.getHolder() instanceof GUIHolder gui_holder) {
             GUI gui = activeGuis.get(gui_holder.uniqueIdentifier());
 
             if (gui != null)
-                if (gui.processClick(p,  e))
+                if (gui.processClick( gPlayer,  e, clickingInGui))
                     e.setCancelled(true);
         }
     }

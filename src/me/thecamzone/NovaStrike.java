@@ -25,6 +25,8 @@ public class NovaStrike extends JavaPlugin {
 
 	private static NovaStrike plugin;
 
+	public static boolean IS_ITEM_ADDER_LOADED = false;
+
 	private GPlayerManager gPlayerManager;
 	private PartyManager partyManager;
 
@@ -35,6 +37,7 @@ public class NovaStrike extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 
+		isUsingItemAdder();
 		gPlayerManager = new GPlayerManager();
 		partyManager = new PartyManager();
 		
@@ -92,6 +95,13 @@ public class NovaStrike extends JavaPlugin {
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
 		}
+	}
+
+	public void isUsingItemAdder() {
+		try {
+			Class.forName("dev.lone.itemsadder.api.CustomStack");
+			IS_ITEM_ADDER_LOADED = true;
+		} catch (ClassNotFoundException ignored) {}
 	}
 
 	public PartyManager getPartyManager() {

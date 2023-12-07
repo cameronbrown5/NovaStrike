@@ -9,9 +9,9 @@ package me.thecamzone.Utils.guiBuilder;
 
 
 import me.thecamzone.Utils.StringUtil;
+import me.thecamzone.gamePlayer.GPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +24,8 @@ public class GUICreator {
     private final String name;
     private final int size;
     private final String uniqueIdentifier;
-    private final HashMap<Integer, GUIItem> items = new HashMap<>();
+    private final HashMap<Integer, GUIItem> guiItems = new HashMap<>();
+    private final HashMap<Integer, GUIItem> inventoryItems = new HashMap<>();
     private boolean persistentGUI = false;
 
     public GUICreator(String name, int size, String uniqueIdentifier) {
@@ -39,41 +40,90 @@ public class GUICreator {
         this.uniqueIdentifier = UUID.randomUUID().toString();
     }
 
-    public void addClickableItem(int inventorySlot, GUIItem clickableItem) {
-        items.put(inventorySlot, clickableItem);
+    public void addClickableGuiItem(int guiSlot, GUIItem clickableItem) {
+        guiItems.put(guiSlot, clickableItem);
     }
 
-    public void addClickableItem(int inventorySlot, GUIItem clickableItem, int... additionalClickSlots) {
-        items.put(inventorySlot, clickableItem);
+    public void addClickableGuiItem(int guiSlot, GUIItem clickableItem, int... additionalClickSlots) {
+        guiItems.put(guiSlot, clickableItem);
 
         for (int slots : additionalClickSlots){
-            addClickableItem(slots, new GUIItem(new ItemStack(Material.BARRIER)) {
+            addClickableGuiItem(slots, new GUIItem(new ItemStack(Material.AIR)) {
                 @Override
-                public boolean onClick(Player p, InventoryClickEvent e) {
-                    return clickableItem.onClick(p, e);
+                public boolean onClick(GPlayer gPlayer , InventoryClickEvent e) {
+                    return clickableItem.onClick(gPlayer, e);
                 }
             });
         }
 
     }
 
-    public void addNonRemovableItem(int inventorySlot, ItemStack itemStack) {
-        items.put(inventorySlot, new GUIItem(itemStack) {
+    /**
+     * Warning: Will replace any item in the slot.
+     */
+    public void addClickableInventoryItem(int inventorySlot, GUIItem clickableItem) {
+        inventoryItems.put(inventorySlot, clickableItem);
+    }
+
+    /**
+     * Warning: Will replace any item in the slot.
+     */
+    public void addClickableInventoryItem(int inventorySlot, GUIItem clickableItem, int... additionalClickSlots) {
+        inventoryItems.put(inventorySlot, clickableItem);
+
+        for (int slots : additionalClickSlots){
+            addClickableGuiItem(slots, new GUIItem(new ItemStack(Material.AIR)) {
+                @Override
+                public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
+                    return clickableItem.onClick(gPlayer, e);
+                }
+            });
+        }
+
+    }
+
+    public void addNonRemovableGuiItem(int guiSlot, ItemStack itemStack) {
+        guiItems.put(guiSlot, new GUIItem(itemStack) {
             @Override
-            public boolean onClick(Player p, InventoryClickEvent e) {
+            public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
                 return true;
             }
         });
     }
 
-    public void addRemovableItem(int inventorySlot, ItemStack itemStack) {
-        items.put(inventorySlot, new GUIItem(itemStack) {
+    public void addRemovableGuiItem(int guiSlot, ItemStack itemStack) {
+        guiItems.put(guiSlot, new GUIItem(itemStack) {
             @Override
-            public boolean onClick(Player p, InventoryClickEvent e) {
+            public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
                 return false;
             }
         });
     }
+
+    /**
+     * Warning: Will replace any item in the slot.
+     */
+    public void addNonRemovableInventoryItem(int inventorySlot, ItemStack itemStack) {
+        inventoryItems.put(inventorySlot, new GUIItem(itemStack) {
+            @Override
+            public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Warning: Will replace any item in the slot.
+     */
+    public void addRemovableInventoryItem(int inventorySlot, ItemStack itemStack) {
+        inventoryItems.put(inventorySlot, new GUIItem(itemStack) {
+            @Override
+            public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
+                return false;
+            }
+        });
+    }
+
 
     public GUI build() {
         GUI activeGui = GuiBuilderManager.getInstance().getFromActive(uniqueIdentifier);
@@ -83,13 +133,14 @@ public class GUICreator {
 
         Inventory inventory = Bukkit.createInventory(new GUIHolder(uniqueIdentifier, persistentGUI), size, StringUtil.formatColor(name));
 
-        items.forEach((slot, guiItem) -> {
+        guiItems.forEach((slot, guiItem) -> {
             if (slot > size - 1) return;
             inventory.setItem(slot, guiItem.getItem());
         });
 
-        GUI gui = new GUI(inventory, items);
+        GUI gui = new GUI(inventory, guiItems, inventoryItems);
         GuiBuilderManager.getInstance().registerGUI(uniqueIdentifier, gui);
+
         return gui;
     }
 

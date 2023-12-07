@@ -7,29 +7,26 @@
 
 package me.thecamzone.Utils.guiBuilder;
 
-import org.bukkit.entity.Player;
+import me.thecamzone.gamePlayer.GPlayer;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class GUIItem {
+public abstract class GUIItem{
     private final ItemStack item;
 
     public GUIItem(ItemStack item) {
         this.item = item;
     }
 
-    public abstract boolean onClick(Player p, InventoryClickEvent e);
-
     ItemStack getItem() {
         return item;
     }
+
+    public abstract boolean onClick(GPlayer gPlayer, InventoryClickEvent e);
 
     //------------------------------------------------------------------------------------------------------------------------------
     // ##############################################################################################################################
     // Default - Getters and Setters
     //##############################################################################################################################
     //------------------------------------------------------------------------------------------------------------------------------
-
-
-
 }
