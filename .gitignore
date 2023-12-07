@@ -22,5 +22,6 @@ spigot-plugin-plugin.ipr
 spigot-plugin-plugin.iws
 build
 testserver
+debug-server/
 
 !gradle/wrapper/*.jar

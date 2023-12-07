@@ -1,7 +1,6 @@
 package me.thecamzone.Commands;
 
 import me.thecamzone.Utils.jcommandbuilder.JCommandManager;
-import me.thecamzone.Utils.jcommandbuilder.StaticJTabProvider;
 
 public class CommandRegister {
 
@@ -11,12 +10,12 @@ public class CommandRegister {
     }
 
     private void registerTabProviders() {
-        JCommandManager.getInstance().registerTabProvider("test", new Developer());
-        JCommandManager.getInstance().registerTabProvider("truefalse", new StaticJTabProvider("true", "false"));
+
     }
 
     private void registerCommands() {
-        JCommandManager.getInstance().registerAnnotationCommand(new Developer());
+        JCommandManager.getInstance().registerAnnotationCommand(new DeveloperCommand());
+        JCommandManager.getInstance().registerAnnotationCommand(new NovaStrikeCommand());
     }
 
 

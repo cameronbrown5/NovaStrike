@@ -12,7 +12,7 @@ public class ErrorReporter {
 
     public static void reportToConsole(boolean addStackTrace, boolean includeFullError, String... errorDescription) {
         ConsoleCommandSender sender = Bukkit.getServer().getConsoleSender();
-        sender.sendMessage("---------- [Monster War Error] ----------");
+        sender.sendMessage("---------- [NovaStrike Error] ----------");
         sender.sendMessage(errorDescription);
         if (addStackTrace) {
             for (String s : StringUtil.getCallTree(includeFullError)) {
@@ -27,7 +27,7 @@ public class ErrorReporter {
     }
 
     public static void reportToPlayer(GPlayer gPlayer, boolean addStackTrace, boolean includeFullError, String... errorDescription) {
-        gPlayer.sendMessage("---------- [Space Travelers Error] ----------");
+        gPlayer.sendMessage("---------- [NovaStrike Error] ----------");
         gPlayer.sendMessage(errorDescription);
         if (addStackTrace) {
             for (String s : StringUtil.getCallTree(includeFullError)) {

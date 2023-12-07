@@ -1,16 +1,14 @@
 package me.thecamzone.Utils;
 
-import java.util.Iterator;
-
+import me.thecamzone.Commands.Party.PartyCommand;
+import me.thecamzone.NovaStrike;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.thecamzone.NovaStrike;
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommand;
-import me.thecamzone.Commands.Party.PartyCommand;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.Iterator;
 
 public class Messager {
 	
@@ -28,22 +26,6 @@ public class Messager {
 	public static void sendErrorMessage(CommandSender messageReceiver, String message) {
 		sendMessage(messageReceiver, message);
 		SFXManager.playErrorSound(messageReceiver);
-	}
-	
-	public static void sendNovaStrikeHelpMessage(CommandSender messageReceiver) {
-		StringBuilder finalMessage = new StringBuilder("&b&lNovaStrike Commands\n");
-		Iterator<NovaStrikeCommand> subcommandIterator = plugin.getNovaStrikeSubcommands().values().iterator();
-		while (subcommandIterator.hasNext()) {
-			NovaStrikeCommand subcommand = subcommandIterator.next();
-			String permission = subcommand.getPermission();
-			if (!permission.isEmpty() && !messageReceiver.hasPermission(subcommand.getPermission()))
-				continue;
-			finalMessage.append("&7").append(subcommand.getUsageMessage()).append(" &b- &e")
-					.append(subcommand.getInfoMessage());
-			if (subcommandIterator.hasNext())
-				finalMessage.append("\n");
-		}
-		sendSuccessMessage(messageReceiver, finalMessage.toString());
 	}
 	
 	public static void sendPartyHelpMessage(CommandSender messageReceiver) {

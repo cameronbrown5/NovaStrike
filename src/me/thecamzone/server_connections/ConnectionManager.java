@@ -2,6 +2,7 @@ package me.thecamzone.server_connections;
 
 import me.thecamzone.NovaStrike;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
@@ -18,10 +19,10 @@ public class ConnectionManager {
     public static ServerConnection connection;
 
     // Creates a thread and connects to the proxy server socket on the new thread.
-    public static void connect() {
+    public static boolean connect() {
         if(task != null) {
             Bukkit.getConsoleSender().sendMessage("[NovaStrike] Server is already connected to proxy.");
-            return;
+            return false;
         }
 
         task = new BukkitRunnable() {
@@ -38,12 +39,15 @@ public class ConnectionManager {
                     connection.run();
 
                     out = new PrintWriter(socket.getOutputStream());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException | RuntimeException e) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[NovaStrike] Could not connect to proxy. Type '/dev connect' to try connection again.");
+                    task = null;
                 }
             }
         };
 
         task.runTaskAsynchronously(NovaStrike.getInstance());
+
+        return true;
     }
 }

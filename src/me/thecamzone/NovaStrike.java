@@ -1,11 +1,7 @@
 package me.thecamzone;
 
 import me.thecamzone.Commands.CommandRegister;
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommand;
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommandCompleter;
-import me.thecamzone.Commands.NovaStrike.NovaStrikeCommandRunner;
-import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeHelpCommand;
-import me.thecamzone.Commands.NovaStrike.SubCommands.NovaStrikeMessageProxyCommand;
+import me.thecamzone.Commands.NovaStrikeCommand;
 import me.thecamzone.Commands.Party.PartyCommand;
 import me.thecamzone.Commands.Party.PartyCommandCompleter;
 import me.thecamzone.Commands.Party.PartyCommandRunner;
@@ -69,9 +65,6 @@ public class NovaStrike extends JavaPlugin {
 	}
 	
 	private void registerCommands() {
-		// NOVASTRIKE SUBCOMMANDS
-		this.novaStrikeSubcommands.put("help", new NovaStrikeHelpCommand());
-		this.novaStrikeSubcommands.put("messageproxy", new NovaStrikeMessageProxyCommand());
 		
 		// PARTY SUBCOMMANDS
 		this.partySubcommands.put("help", new PartyHelpCommand());
@@ -82,9 +75,6 @@ public class NovaStrike extends JavaPlugin {
 		this.partySubcommands.put("leave", new PartyLeaveCommand());
 		this.partySubcommands.put("promote", new PartyPromoteCommand());
 		this.partySubcommands.put("kick", new PartyKickCommand());
-		
-		getCommand("novastrike").setExecutor((CommandExecutor) new NovaStrikeCommandRunner());
-		getCommand("novastrike").setTabCompleter((TabCompleter) new NovaStrikeCommandCompleter());
 		
 		getCommand("party").setExecutor((CommandExecutor) new PartyCommandRunner());
 		getCommand("party").setTabCompleter((TabCompleter) new PartyCommandCompleter());
@@ -98,12 +88,10 @@ public class NovaStrike extends JavaPlugin {
 		return partySubcommands;
 	}
 	
-	private Boolean makeDir() {
+	private void makeDir() {
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
-			return true;
 		}
-		return false;
 	}
 
 	public PartyManager getPartyManager() {
