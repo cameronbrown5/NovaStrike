@@ -154,6 +154,9 @@ public class JCommandAnnotationProcessor {
                 if (jCommandManager.hasTabProvider(jArg.tabProvider()))
                     jArgument.setTabProvider(jCommandManager.getTabProvider(jArg.tabProvider()));
 
+            if (!jArg.toLastArg().equalsIgnoreCase("FALSE"))
+                jArgument.setToLastArg();
+
             JTabProviderCase jTabProviderCase;
 
             try {

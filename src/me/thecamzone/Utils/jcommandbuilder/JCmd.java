@@ -70,7 +70,6 @@ public class JCmd {
             return;
         }
 
-
         if (!processJArguments(jCommandSender, rawCommandArgs)) return;
 
         ArrayList<Object> methodParameters = new ArrayList<>();
@@ -94,6 +93,13 @@ public class JCmd {
 
             if (rawCommandArgs.length - 1 >= rawCommandArgTracker) {
                 String rawCommandArg = rawCommandArgs[rawCommandArgTracker];
+
+                if (jArgument.isReadLastArg()){
+                    StringBuilder argBuilder = new StringBuilder();
+                    for (int i = rawCommandArgTracker; i < rawCommandArgs.length - 1 ; i++)
+                        argBuilder.append(rawCommandArgs[i]);
+                    rawCommandArg = argBuilder.toString();
+                }
 
                 JArgument.JArgumentValidateResponse validateResponse = jArgument.validate(rawCommandArg);
 

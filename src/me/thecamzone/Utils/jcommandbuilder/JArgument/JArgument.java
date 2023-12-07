@@ -11,6 +11,7 @@ public abstract class JArgument<T> {
     protected static final JArgumentValidateResponse VALID = new JArgumentValidateResponse(false, "");
     private final String argName;
     private JTabProvider tabProvider = ArrayList::new;
+    private boolean readToLastArg = false;
     private T userSetValue;
     private T defaultValue;
     private JTabProviderCase jTabProviderCase;
@@ -80,6 +81,14 @@ public abstract class JArgument<T> {
 
     public JTabProviderCase getTabProviderCase() {
         return jTabProviderCase;
+    }
+
+    public void setReadLastArg(){
+        readToLastArg = true;
+    }
+
+    public boolean isReadLastArg() {
+        return readToLastArg;
     }
 
     public String getNameWithBracketsAndColor() {
