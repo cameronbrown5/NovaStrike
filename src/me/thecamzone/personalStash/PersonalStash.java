@@ -1,5 +1,6 @@
 package me.thecamzone.personalStash;
 
+import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
 import me.thecamzone.Utils.EquipmentType;
 import me.thecamzone.Utils.ItemBuilder;
 import me.thecamzone.Utils.guiBuilder.GUICreator;
@@ -27,13 +28,19 @@ public class PersonalStash {
     }
 
     public void openGui(GPlayer gPlayer, int loadoutNumber){
-        GUICreator guiCreator = new GUICreator("Personal Stash", 54, UUID.randomUUID().toString());
+        GUICreator guiCreator = new GUICreator("", 54, UUID.randomUUID().toString());
+        FontImageWrapper wrapper = new FontImageWrapper("_iainternal:personal_stash_gui_1");
+        guiCreator.setTextures(wrapper);
+        guiCreator.setTextureOffset(-14);
         addBaseItemsToGui(guiCreator, loadoutNumber);
         guiCreator.build().open(gPlayer);
     }
 
     public void openGuiWithEquipmentSelect(GPlayer gPlayer, int page, int loadoutNumber, EquipmentType equipmentType){
-        GUICreator guiCreator = new GUICreator("Personal Stash", 54, UUID.randomUUID().toString());
+        GUICreator guiCreator = new GUICreator("", 54, UUID.randomUUID().toString());
+        FontImageWrapper bottom = new FontImageWrapper("_iainternal:pop_up");
+        guiCreator.setTextures(bottom);
+        guiCreator.setTextureOffset(-14);
         addBaseItemsToGui(guiCreator, loadoutNumber);
         addEquipmentSelectItemsToGui(gPlayer, guiCreator, page, equipmentType, loadoutNumber);
         guiCreator.build().open(gPlayer);
@@ -44,10 +51,10 @@ public class PersonalStash {
         int loadOutSlotTracker = 0;
         for (int i = 1; i <= 5 ; i++) {
             if (i == loadoutNumber){
-                guiCreator.addNonRemovableGuiItem(loadOutSlotTracker++, new ItemBuilder(Material.LIME_DYE).setDisplayName("Current Loadout: " + i).build());
+                guiCreator.addNonRemovableGuiItem(loadOutSlotTracker + i + 3, new ItemBuilder(Material.LIME_DYE).setDisplayName("Current Loadout: " + i).build());
             }else {
                 int finalI = i;
-                guiCreator.addClickableGuiItem(loadOutSlotTracker++, new GUIItem(new ItemBuilder(Material.GRAY_DYE).setDisplayName("Select Loadout " + finalI).build()) {
+                guiCreator.addClickableGuiItem(loadOutSlotTracker + i + 3, new GUIItem(new ItemBuilder(Material.GRAY_DYE).setDisplayName("Select Loadout " + finalI).build()) {
                     @Override
                     public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
                         openGui(gPlayer, finalI);
@@ -75,7 +82,7 @@ public class PersonalStash {
         }, 14);
 
 
-        guiCreator.addClickableGuiItem(15, new GUIItem(new ItemStack(Material.PAPER)) {
+        guiCreator.addClickableGuiItem(16, new GUIItem(new ItemStack(Material.PAPER)) {
             @Override
             public boolean onClick(GPlayer gPlayer, InventoryClickEvent e) {
                 openGuiWithEquipmentSelect(gPlayer, 1, loadoutNumber, EquipmentType.GRENADE);

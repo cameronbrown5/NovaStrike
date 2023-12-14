@@ -7,6 +7,7 @@
 
 package me.thecamzone.Utils.guiBuilder;
 
+import dev.lone.itemsadder.api.FontImages.TexturedInventoryWrapper;
 import me.thecamzone.gamePlayer.GPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,13 +17,13 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class GUI {
+public class GUI<T> {
 
-    private final Inventory guiInventory;
+    private final T guiInventory;
     private final HashMap<Integer, GUIItem> guiClickableItemsBySlot;
     private final HashMap<Integer, GUIItem> inventoryClickableItemsBySlot;
 
-    public GUI(Inventory guiInventory, HashMap<Integer, GUIItem> guiClickableItemsBySlot, HashMap<Integer, GUIItem> inventoryClickableItemsBySlot) {
+    public GUI(T guiInventory, HashMap<Integer, GUIItem> guiClickableItemsBySlot, HashMap<Integer, GUIItem> inventoryClickableItemsBySlot) {
         this.guiInventory = guiInventory;
         this.guiClickableItemsBySlot = guiClickableItemsBySlot;
         this.inventoryClickableItemsBySlot = inventoryClickableItemsBySlot;
@@ -46,7 +47,11 @@ public class GUI {
     }
 
     public void open(Player p) {
-        p.openInventory(guiInventory);
+        if(guiInventory instanceof Inventory i)
+            p.openInventory(i);
+
+        if(guiInventory instanceof TexturedInventoryWrapper i)
+            i.showInventory(p);
 
         inventoryClickableItemsBySlot.forEach((slot, item) -> p.getInventory().setItem(slot, item.getItem()));
     }
@@ -56,9 +61,5 @@ public class GUI {
     // Default - Getters and Setters
     //##############################################################################################################################
     //------------------------------------------------------------------------------------------------------------------------------
-
-    public Inventory getGuiInventory() {
-        return guiInventory;
-    }
 
 }

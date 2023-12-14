@@ -8,7 +8,8 @@
 package me.thecamzone.Utils.guiBuilder;
 
 
-import me.thecamzone.Utils.StringUtil;
+import dev.lone.itemsadder.api.FontImages.FontImageWrapper;
+import dev.lone.itemsadder.api.FontImages.TexturedInventoryWrapper;
 import me.thecamzone.gamePlayer.GPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class GUICreator {
@@ -27,6 +29,9 @@ public class GUICreator {
     private final HashMap<Integer, GUIItem> guiItems = new HashMap<>();
     private final HashMap<Integer, GUIItem> inventoryItems = new HashMap<>();
     private boolean persistentGUI = false;
+    private FontImageWrapper[] textures;
+    private int titleOffset = 16;
+    private int textureOffset = -16;
 
     public GUICreator(String name, int size, String uniqueIdentifier) {
         this.name = name;
@@ -124,24 +129,60 @@ public class GUICreator {
         });
     }
 
+    public void setTextures(FontImageWrapper... images) {
+        if(images == null) {
+            Bukkit.getConsoleSender().sendMessage("Null");
+        }
 
-    public GUI build() {
-        GUI activeGui = GuiBuilderManager.getInstance().getFromActive(uniqueIdentifier);
+        this.textures = images;
+    }
+
+    public void setTextureOffset(int offset) {
+        textureOffset = offset;
+    }
+
+    public void setTitleOffset(int offset) {
+        titleOffset = offset;
+    }
+
+    public GUI<?> build() {
+        GUI<?> activeGui = GuiBuilderManager.getInstance().getFromActive(uniqueIdentifier);
 
         if (activeGui != null)
             return activeGui;
 
-        Inventory inventory = Bukkit.createInventory(new GUIHolder(uniqueIdentifier, persistentGUI), size, StringUtil.formatColor(name));
+        Inventory inventory = Bukkit.createInventory(new GUIHolder(uniqueIdentifier, persistentGUI), size, name);
 
-        guiItems.forEach((slot, guiItem) -> {
-            if (slot > size - 1) return;
+        TexturedInventoryWrapper inventoryWrapper = null;
+        if(textures != null) {
+            inventoryWrapper = new TexturedInventoryWrapper(
+                new GUIHolder(uniqueIdentifier, persistentGUI),
+                size,
+                name,
+                titleOffset,
+                textureOffset,
+                textures
+            );
+
+            inventory = inventoryWrapper.getInternal();
+        }
+
+        for (Map.Entry<Integer, GUIItem> entry : guiItems.entrySet()) {
+            Integer slot = entry.getKey();
+            GUIItem guiItem = entry.getValue();
+            if (slot > size - 1) continue;
             inventory.setItem(slot, guiItem.getItem());
-        });
+        }
 
-        GUI gui = new GUI(inventory, guiItems, inventoryItems);
-        GuiBuilderManager.getInstance().registerGUI(uniqueIdentifier, gui);
-
-        return gui;
+        if(textures == null) {
+            GUI<Inventory> gui = new GUI<Inventory>(inventory, guiItems, inventoryItems);
+            GuiBuilderManager.getInstance().registerGUI(uniqueIdentifier, gui);
+            return gui;
+        } else {
+            GUI<TexturedInventoryWrapper> gui = new GUI<TexturedInventoryWrapper>(inventoryWrapper, guiItems, inventoryItems);
+            GuiBuilderManager.getInstance().registerGUI(uniqueIdentifier, gui);
+            return gui;
+        }
     }
 
     // warning: gui will not be removed from the tracker. persistentGUI should not be consistently created.

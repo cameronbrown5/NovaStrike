@@ -32,7 +32,6 @@ public class DeveloperCommand {
     @JCommand("Dev")
     @JSubCommand("connect")
     public void connect(JCommandSender sender) {
-
         ConnectionManager.connect();
     }
 

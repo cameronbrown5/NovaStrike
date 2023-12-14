@@ -10,6 +10,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.lang.Nullable;
 import me.thecamzone.Utils.task.TaskAsync;
+import net.minecraft.server.MinecraftServer;
 import org.bson.Document;
 
 public class MongoDBDataManager implements AutoCloseable {
@@ -83,7 +84,7 @@ public class MongoDBDataManager implements AutoCloseable {
     public Document load(String documentID) {
         if (isNotConnected()) return null;
 
-        if (Thread.currentThread() == MinecraftServer.getServer().serverThread){
+        if (Thread.currentThread() == MinecraftServer.getServer().ag){
             ErrorReporter.reportToConsole(true, false, "MongoDB option not being called async. Calls to load data should be async.");
         }
 

@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 public class GPlayer extends PlayerWrapper {
 
@@ -22,7 +21,7 @@ public class GPlayer extends PlayerWrapper {
     private final HashMap<Integer, String> loadoutSecondaryWeapon = new HashMap<>();
     private final HashMap<Integer, String> loadoutGrenade = new HashMap<>();
 
-    private final HashMap<EquipmentType, Set<String>> equipment = new HashMap<>();
+    private final HashMap<EquipmentType, HashSet<String>> equipment = new HashMap<>();
 
 
     {
@@ -41,7 +40,10 @@ public class GPlayer extends PlayerWrapper {
     }
 
     public void grantEquipment(String equipmentName, EquipmentType equipmentType){
-      equipment.get(equipmentType).add(equipmentName);
+      HashSet<String> set = equipment.getOrDefault(equipmentType, new HashSet<>());
+
+      set.add(equipmentName);
+      equipment.put(equipmentType, set);
     }
 
     public void giveLoadoutItems(int loadoutNumber){
