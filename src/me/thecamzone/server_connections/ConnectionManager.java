@@ -34,7 +34,7 @@ public class ConnectionManager {
 
                 try {
                     socket = new Socket(SERVER_IP, SERVER_PORT);
-                    connection = new ServerConnection(socket);
+                    connection = new ServerConnection(socket, this);
                     Bukkit.getConsoleSender().sendMessage("[NovaStrike] Connected to " + socket.getInetAddress() + ":" + socket.getPort());
                     connection.run();
 
@@ -50,4 +50,12 @@ public class ConnectionManager {
 
         return true;
     }
+
+    public static void close() {
+        connection.close();
+        task.cancel();
+        task = null;
+    }
 }
+
+

@@ -94,8 +94,13 @@ public class JCmd {
 
                 if (jArgument.isReadLastArg()){
                     StringBuilder argBuilder = new StringBuilder();
-                    for (int i = rawCommandArgTracker; i < rawCommandArgs.length - 1 ; i++)
+                    for (int i = rawCommandArgTracker; i < rawCommandArgs.length ; i++) {
                         argBuilder.append(rawCommandArgs[i]);
+                        if(i != rawCommandArgs.length - 1)
+                            argBuilder.append(" ");
+                    }
+
+
                     rawCommandArg = argBuilder.toString();
                 }
 

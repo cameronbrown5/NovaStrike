@@ -26,6 +26,7 @@ public class NovaStrike extends JavaPlugin {
 	private static NovaStrike plugin;
 
 	public static boolean IS_ITEM_ADDER_LOADED = false;
+	public static int SERVER_PORT;
 
 	private GPlayerManager gPlayerManager;
 	private PartyManager partyManager;
@@ -47,7 +48,14 @@ public class NovaStrike extends JavaPlugin {
 		new CommandRegister();
 		registerCommands();
 
+		SERVER_PORT = getServer().getPort();
+
 		ConnectionManager.connect();
+	}
+
+	@Override
+	public void onDisable() {
+		ConnectionManager.close();
 	}
 	
 	public static NovaStrike getInstance() {

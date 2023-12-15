@@ -7,7 +7,7 @@ public class ConnectionCommand {
 
     public static void handleNetworkCommand(String command, String[] args) {
         if(command.equalsIgnoreCase("runcommand")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), StringUtil.displayArray(args).replace("/", ""));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), StringUtil.formatArgs(args).replace("/", ""));
         }
     }
 

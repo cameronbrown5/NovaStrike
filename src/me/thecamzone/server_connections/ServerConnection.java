@@ -13,11 +13,13 @@ import java.util.Arrays;
 
 public class ServerConnection implements Runnable {
     private final Socket socket;
+    private final BukkitRunnable task;
     private final BufferedReader in;
     private final PrintWriter out;
 
-    public ServerConnection(Socket socket) throws IOException {
+    public ServerConnection(Socket socket, BukkitRunnable task) throws IOException {
         this.socket = socket;
+        this.task = task;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
     }
@@ -25,6 +27,8 @@ public class ServerConnection implements Runnable {
     @Override
     public void run() {
         try {
+            out.println("handshake " + NovaStrike.SERVER_PORT);
+
             while(true) {
                 String input = in.readLine();
 
@@ -37,25 +41,35 @@ public class ServerConnection implements Runnable {
                     @Override
                     public void run() {
                         ConnectionCommand.handleNetworkCommand(command, modifiedArgs);
-                        Bukkit.getConsoleSender().sendMessage("[Proxy -> Game] " + input);
+                        Bukkit.getConsoleSender().sendMessage("[Proxy -> Game]: " + input);
                     }
                 };
                 task.runTask(NovaStrike.getInstance());
             }
-        } catch(IOException e) {
-            Bukkit.getConsoleSender().sendMessage("[NovaStrike] Disconnected from proxy.");
-        } finally {
-            try {
-                in.close();
-                out.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        } catch(IOException ignored) { }
+        finally {
+            ConnectionManager.close();
         }
 
     }
 
+    public void close() {
+        try {
+            socket.close();
+        } catch (IOException ignored) { }
+        finally {
+            Bukkit.getConsoleSender().sendMessage("[NovaStrike] Disconnected from proxy.");
+        }
+    }
+
     public void sendMessageToProxy(String message) {
+        Bukkit.getConsoleSender().sendMessage("[Game -> Proxy]: " + message);
+
         out.println(message);
+    }
+
+    public void sendMessageToProxy(String[] message) {
+        String formattedMessage = String.join(" ", message);
+        sendMessageToProxy(formattedMessage);
     }
 }
